@@ -44,8 +44,7 @@ def test1():
                                 min_samples_leaf=10, oob_score=True)
     rf.fit(X_train, y_train)
 
-    I = importances(rf, X_test, y_test)
-    return I
+    return importances(rf, X_test, y_test)
 
 
 def test2():
@@ -56,8 +55,12 @@ def test2():
                                 max_features=1.0,
                                 min_samples_leaf=10, oob_score=True)
     rf.fit(X_train, y_train)
-    I = importances(rf, X_test, y_test, features=['bedrooms','bathrooms',['latitude', 'longitude']])
-    return I
+    return importances(
+        rf,
+        X_test,
+        y_test,
+        features=['bedrooms', 'bathrooms', ['latitude', 'longitude']],
+    )
 
 
 def test3():
@@ -74,8 +77,7 @@ def test3():
     cl = RandomForestClassifier(n_estimators=20)
     cl.fit(X_train, y_train)
 
-    I = importances(cl, X_test, y_test)
-    return I
+    return importances(cl, X_test, y_test)
 
 
 viz = plot_importances(test1())

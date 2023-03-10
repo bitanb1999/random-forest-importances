@@ -148,7 +148,7 @@ def importances(model, X_valid, y_valid, features=None, n_samples=5000, sort=Tru
         model_feature_set = set(X_valid.columns.values)
         # any features left over?
         other_feature_set = model_feature_set.difference(req_feature_set)
-        if len(other_feature_set) > 0:
+        if other_feature_set:
             # if leftovers, we need group together as single new feature
             features.append(list(other_feature_set))
 
@@ -465,8 +465,7 @@ def oob_classifier_accuracy(rf, X_train, y_train):
     predicted_class_indexes = np.argmax(predictions, axis=1)
     predicted_classes = [rf.classes_[i] for i in predicted_class_indexes]
 
-    oob_score = np.mean(y == predicted_classes)
-    return oob_score
+    return np.mean(y == predicted_classes)
 
 
 def oob_classifier_f1_score(rf, X_train, y_train):
@@ -491,8 +490,7 @@ def oob_classifier_f1_score(rf, X_train, y_train):
     predicted_class_indexes = np.argmax(predictions, axis=1)
     predicted_classes = [rf.classes_[i] for i in predicted_class_indexes]
 
-    oob_score = f1_score(y, predicted_classes, average='macro')
-    return oob_score
+    return f1_score(y, predicted_classes, average='macro')
 
 
 def oob_regression_r2_score(rf, X_train, y_train):
@@ -521,8 +519,7 @@ def oob_regression_r2_score(rf, X_train, y_train):
 
     predictions /= n_predictions
 
-    oob_score = r2_score(y, predictions)
-    return oob_score
+    return r2_score(y, predictions)
 
 
 def stemplot_importances(df_importances,
@@ -564,9 +561,8 @@ def stemplot_importances(df_importances,
     if bgcolor:
         ax.set_facecolor(bgcolor)
 
-    yloc = []
     y = barcounts[0]*unit / 2
-    yloc.append(y)
+    yloc = [y]
     for i in range(1,len(barcounts)):
         wprev = barcounts[i-1]
         w = barcounts[i]
@@ -679,9 +675,8 @@ def plot_importances(df_importances,
     if bgcolor:
         ax.set_facecolor(bgcolor)
 
-    yloc = []
     y = barcounts[0]*unit / 2 + ypadding
-    yloc.append(y)
+    yloc = [y]
     for i in range(1,len(barcounts)):
         wprev = barcounts[i-1]
         w = barcounts[i]
@@ -904,8 +899,7 @@ def feature_corr_matrix(df, method="spearman"):
     :return: a data frame with the correlation matrix
     """
     corr = np.round(get_feature_corr(df, method=method), 4)
-    df_corr = pd.DataFrame(data=corr, index=df.columns, columns=df.columns)
-    return df_corr
+    return pd.DataFrame(data=corr, index=df.columns, columns=df.columns)
 
 
 def plot_corr_heatmap(df,
@@ -1035,6 +1029,4 @@ def jeremy_trick_reset_RF_sample_size():
         forest.check_random_state(rs).randint(0, n_samples, n_samples))
 
 def myround(v,ndigits=2):
-    if np.isclose(v, 0.0):
-        return "0"
-    return format(v, '.' + str(ndigits) + 'f')
+    return "0" if np.isclose(v, 0.0) else format(v, f'.{str(ndigits)}f')
