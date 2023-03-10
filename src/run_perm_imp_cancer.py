@@ -18,7 +18,7 @@ N = len(df)-20
 target='diagnosis'
 anomaly = df[df[target] == 1]
 normal = df[df[target] == 0]
-df = pd.concat([anomaly[0:20], normal[0:N]])
+df = pd.concat([anomaly[:20], normal[:N]])
 
 X, y = df.drop('diagnosis', axis=1), df['diagnosis']
 
